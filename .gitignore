@@ -20,8 +20,8 @@
 *.rar
 
 # SOA files and folders
-/angelburgos-Calculadora/SOA/BPEL/.designer
-/angelburgos-Calculadora/SOA/SCA-INF
+/angelburgos-FlightServiceProject/SOA/BPEL/.designer
+/angelburgos-FlightServiceProject/SOA/SCA-INF
 /src/META-INF
 
 # JDeveloper-specific configuration files
