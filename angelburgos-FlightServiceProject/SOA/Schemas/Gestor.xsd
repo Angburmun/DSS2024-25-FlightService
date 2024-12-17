@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<schema attributeFormDefault="unqualified"
+	elementFormDefault="qualified"
+	targetNamespace="http://xmlns.oracle.com/angelburgos_FlightServiceApplication/angelburgos_FlightServiceProject/Gestor"
+	xmlns="http://www.w3.org/2001/XMLSchema">
+	<element name="GestorRequestMessage">
+		<complexType>
+			<sequence>
+				<element name="nombreEmpleado" type="string"/>
+    <element name="ciudadDestino" type="string"/>
+    <element name="ciudadSalida" type="string"/>
+    <element name="fechaInicio" type="dateTime"/>
+    <element name="fechaFin" type="dateTime"/>
+   </sequence>
+		</complexType>
+	</element>
+	<element name="GestorResponseMessage">
+		<complexType>
+			<sequence>
+				<element name="precioTotal" type="float"/>
+			</sequence>
+		</complexType>
+	</element>
+</schema>
