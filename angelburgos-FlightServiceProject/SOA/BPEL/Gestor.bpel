@@ -64,8 +64,6 @@
     <variable name="outputVariable" messageType="client:GestorResponseMessage"/>
     <variable name="InvokeEmpleado_process_InputVariable" messageType="ns1:EmpleadoRequestMessage"/>
     <variable name="InvokeEmpleado_process_OutputVariable" messageType="ns1:EmpleadoResponseMessage"/>
-    <variable name="Invoke1_process_InputVariable" messageType="ns2:IberiaRequestMessage"/>
-    <variable name="Invoke1_process_OutputVariable" messageType="ns2:IberiaResponseMessage"/>
     <variable name="InvokeVueling_process_InputVariable" messageType="ns3:VuelingRequestMessage"/>
     <variable name="InvokeVueling_process_OutputVariable" messageType="ns3:VuelingResponseMessage"/>
     <variable name="InvokeIberia_process_InputVariable" messageType="ns2:IberiaRequestMessage"/>
@@ -85,75 +83,73 @@
     <receive name="receiveInput" partnerLink="gestor_client" portType="client:Gestor" operation="process" variable="inputVariable" createInstance="yes"/>
     <assign name="AssignNombreEmpleado">
       <copy>
-        <from>$InvokeEmpleado_process_InputVariable.payload/ns1:nombre</from>
-        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$inputVariable.payload/client:nombreEmpleado</to>
+        <from>$inputVariable.payload/client:nombreEmpleado</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeEmpleado_process_InputVariable.payload/ns1:nombre</to>
       </copy>
     </assign>
     <invoke name="InvokeEmpleado" partnerLink="empleado_client" portType="ns1:Empleado"
             operation="process" inputVariable="InvokeEmpleado_process_InputVariable"
             outputVariable="InvokeEmpleado_process_OutputVariable" bpelx:invokeAsDetail="no"/>
+    <assign name="AssignFlightInformation">
+      <copy>
+        <from>$inputVariable.payload/client:ciudadDestino</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeVueling_process_InputVariable.payload/ns3:ciudadDestino</to>
+      </copy>
+      <copy>
+        <from>$inputVariable.payload/client:ciudadDestino</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeIberia_process_InputVariable.payload/ns2:ciudadDestino</to>
+      </copy>
+      <copy>
+        <from>$inputVariable.payload/client:ciudadSalida</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeVueling_process_InputVariable.payload/ns3:ciudadSalida</to>
+      </copy>
+      <copy>
+        <from>$inputVariable.payload/client:ciudadSalida</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeIberia_process_InputVariable.payload/ns2:ciudadSalida</to>
+      </copy>
+      <copy>
+        <from>$inputVariable.payload/client:fechaInicio</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeVueling_process_InputVariable.payload/ns3:fechaInicio</to>
+      </copy>
+      <copy>
+        <from>$inputVariable.payload/client:fechaFin</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeVueling_process_InputVariable.payload/ns3:fechaFin</to>
+      </copy>
+      <copy>
+        <from>$inputVariable.payload/client:fechaInicio</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeIberia_process_InputVariable.payload/ns2:fechaInicio</to>
+      </copy>
+      <copy>
+        <from>$inputVariable.payload/client:fechaFin</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeIberia_process_InputVariable.payload/ns2:fechaFin</to>
+      </copy>
+      <copy>
+        <from>$InvokeEmpleado_process_OutputVariable.payload/ns1:tipoEmpleado</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeIberia_process_InputVariable.payload/ns2:tipoEmpleado</to>
+      </copy>
+      <copy>
+        <from>$InvokeEmpleado_process_OutputVariable.payload/ns1:tipoEmpleado</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeVueling_process_InputVariable.payload/ns3:tipoEmpleado</to>
+      </copy>
+    </assign>
     <flow name="Flow1">
       <sequence name="Sequence">
-        <assign name="AssignFlightInformation">
-          <copy>
-            <from>$inputVariable.payload/client:ciudadDestino</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeIberia_process_InputVariable.payload/ns2:ciudadDestino</to>
-          </copy>
-          <copy>
-            <from>$inputVariable.payload/client:ciudadSalida</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeIberia_process_InputVariable.payload/ns2:ciudadSalida</to>
-          </copy>
-          <copy>
-            <from>$inputVariable.payload/client:fechaInicio</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeIberia_process_InputVariable.payload/ns2:fechaInicio</to>
-          </copy>
-          <copy>
-            <from>$inputVariable.payload/client:fechaFin</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeIberia_process_InputVariable.payload/ns2:fechaFin</to>
-          </copy>
-          <copy>
-            <from>$InvokeEmpleado_process_OutputVariable.payload/ns1:tipoEmpleado</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeIberia_process_InputVariable.payload/ns2:tipoEmpleado</to>
-          </copy>
-        </assign>
-        <invoke name="InvokeIberia" partnerLink="iberia_client" portType="ns2:Iberia"
+        <invoke name="InvokeIberia" bpelx:invokeAsDetail="no" partnerLink="iberia_client" portType="ns2:Iberia"
                 operation="process" inputVariable="InvokeIberia_process_InputVariable"
-                outputVariable="InvokeIberia_process_OutputVariable" bpelx:invokeAsDetail="no"/>
+                outputVariable="InvokeIberia_process_OutputVariable"/>
       </sequence>
       <sequence name="Sequence1">
-        <assign name="AssignFlightInformation">
-          <copy>
-            <from>$inputVariable.payload/client:ciudadDestino</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeVueling_process_InputVariable.payload/ns3:ciudadDestino</to>
-          </copy>
-          <copy>
-            <from>$inputVariable.payload/client:ciudadSalida</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeVueling_process_InputVariable.payload/ns3:ciudadSalida</to>
-          </copy>
-          <copy>
-            <from>$inputVariable.payload/client:fechaFin</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeVueling_process_InputVariable.payload/ns3:fechaFin</to>
-          </copy>
-          <copy>
-            <from>$inputVariable.payload/client:fechaInicio</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeVueling_process_InputVariable.payload/ns3:fechaInicio</to>
-          </copy>
-          <copy>
-            <from>$InvokeEmpleado_process_OutputVariable.payload/ns1:tipoEmpleado</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeVueling_process_InputVariable.payload/ns3:tipoEmpleado</to>
-          </copy>
-        </assign>
-        <invoke name="InvokeVueling" partnerLink="vueling_client" portType="ns3:Vueling"
+        <invoke name="InvokeVueling" bpelx:invokeAsDetail="no" partnerLink="vueling_client" portType="ns3:Vueling"
                 operation="process" inputVariable="InvokeVueling_process_InputVariable"
-                outputVariable="InvokeVueling_process_OutputVariable" bpelx:invokeAsDetail="no"/>
+                outputVariable="InvokeVueling_process_OutputVariable"/>
       </sequence>
     </flow>
-    <if name="ComprobarPrecio">
+    <if name="ComprobarPrecios">
       <documentation>
         <![CDATA[Iberia > Vueling]]>
       </documentation>
-      <condition>number(normalize-space($Invoke1_process_OutputVariable.payload/ns2:precio))&gt;number(normalize-space($InvokeVueling_process_OutputVariable.payload/ns3:precio))</condition>
-      <assign name="AssignPrice">
+      <condition>$InvokeIberia_process_OutputVariable.payload/ns2:precio&gt;$InvokeVueling_process_OutputVariable.payload/ns3:precio</condition>
+      <assign name="AssignVueling">
         <copy>
           <from>$InvokeVueling_process_OutputVariable.payload/ns3:precio</from>
           <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:precioTotal</to>
@@ -163,9 +159,9 @@
         <documentation>
           <![CDATA[Iberia <= Vueling]]>
         </documentation>
-        <assign name="AssignPrice">
+        <assign name="AssignIberia">
           <copy>
-            <from>$Invoke1_process_OutputVariable.payload/ns2:precio</from>
+            <from>$InvokeIberia_process_OutputVariable.payload/ns2:precio</from>
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:precioTotal</to>
           </copy>
         </assign>

@@ -82,7 +82,7 @@
     </componentType>
     <property name="bpel.config.transaction" type="xs:string" many="false">required</property>
   </component>
-  <!---->
+  <!--
   <reference name="empleado_client" ui:wsdlLocation="WSDLs/Empleado.wsdl">
     <interface.wsdl interface="http://xmlns.oracle.com/angelburgos_FlightServiceApplication/angelburgos_FlightServiceProject/Empleado#wsdl.interface(Empleado)"/>
     <binding.ws port="http://xmlns.oracle.com/angelburgos_FlightServiceApplication/angelburgos_FlightServiceProject/Empleado#wsdl.endpoint(EmpleadoService/EmpleadoPort)"
@@ -98,6 +98,7 @@
     <binding.ws port="http://xmlns.oracle.com/angelburgos_FlightServiceApplication/angelburgos_FlightServiceProject/Vueling#wsdl.endpoint(VuelingService/VuelingPort)"
                 location="WSDLs/Vueling.wsdl" soapVersion="1.1"/>
   </reference>
+  -->
   <wire>
     <source.uri>empleado_client_ep</source.uri>
     <target.uri>Empleado/empleado_client</target.uri>
@@ -116,14 +117,14 @@
   </wire>
   <wire>
     <source.uri>Gestor/empleado_client</source.uri>
-    <target.uri>empleado_client</target.uri>
+    <target.uri>Empleado/empleado_client</target.uri>
   </wire>
   <wire>
     <source.uri>Gestor/iberia_client</source.uri>
-    <target.uri>iberia_client</target.uri>
+    <target.uri>Iberia/iberia_client</target.uri>
   </wire>
   <wire>
     <source.uri>Gestor/vueling_client</source.uri>
-    <target.uri>vueling_client</target.uri>
+    <target.uri>Vueling/vueling_client</target.uri>
   </wire>
 </composite>

@@ -26,7 +26,8 @@
          xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
          xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
          xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
-         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap">
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap"
+         xmlns:ns1="http://xmlns.oracle.com/angelburgos_FlightServiceApplication/angelburgos_FlightServiceProject/Gestor">
 
     <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/angelburgos_FlightServiceApplication/angelburgos_FlightServiceProject/Vueling" location="../WSDLs/Vueling.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <!-- 
@@ -83,7 +84,7 @@
         </assign>
         <if name="ValidateTipoEmpleado">
           <documentation>
-            <![CDATA[primeraClase]]>
+            <![CDATA[primeraClase (*17)]]>
           </documentation>
           <condition>xp20:upper-case($inputVariable.payload/client:tipoEmpleado)='PRIMERACLASE'</condition>
           <assign name="AssignPrice">
@@ -94,7 +95,7 @@
           </assign>
           <else>
             <documentation>
-              <![CDATA[turista]]>
+              <![CDATA[turista (*2)]]>
             </documentation>
             <assign name="AssignPrice">
               <copy>
@@ -103,6 +104,30 @@
               </copy>
             </assign>
           </else>
+        </if>
+        <if name="IfCiudadesBono">
+          <documentation>
+            <![CDATA[CiudadDestino = AMS (Amsterdam)]]>
+          </documentation>
+          <condition>xp20:upper-case($inputVariable.payload/client:ciudadDestino)='AMS'</condition>
+          <assign name="AssignDiscount">
+            <copy>
+              <from>$outputVariable.payload/client:precio*0.833</from>
+              <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:precio</to>
+            </copy>
+          </assign>
+          <elseif>
+            <documentation>
+              <![CDATA[CiudadSalida = LEI (Almería)]]>
+            </documentation>
+            <condition>xp20:upper-case($inputVariable.payload/client:ciudadSalida)='LEI'</condition>
+            <assign name="AssignDiscount">
+              <copy>
+                <from>$outputVariable.payload/client:precio*0.33</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:precio</to>
+              </copy>
+            </assign>
+          </elseif>
         </if>
       </sequence>
       <else>

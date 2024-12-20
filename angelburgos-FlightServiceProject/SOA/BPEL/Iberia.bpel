@@ -27,7 +27,8 @@
          xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
          xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
          xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
-         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap">
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap"
+         xmlns:ns2="http://xmlns.oracle.com/angelburgos_FlightServiceApplication/angelburgos_FlightServiceProject/Gestor">
 
     <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/angelburgos_FlightServiceApplication/angelburgos_FlightServiceProject/Iberia" location="../WSDLs/Iberia.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <!-- 
@@ -68,8 +69,7 @@
   -->
   <sequence name="main">
 
-    <!-- Receive input from requestor. (Note: This maps to operation defined in Iberia.wsdl) -->
-    <receive name="receiveInput" partnerLink="iberia_client" portType="client:Iberia" operation="process" variable="inputVariable" createInstance="yes"/>
+    <!-- Receive input from requestor. (Note: This maps to operation defined in Iberia.wsdl) --><receive name="receiveInput" partnerLink="iberia_client" portType="client:Iberia" operation="process" variable="inputVariable" createInstance="yes"/>
     <if name="ValidateFlightDates">
       <documentation>
         <![CDATA[fechaSalida < fechaLlegada]]>
@@ -84,7 +84,7 @@
         </assign>
         <if name="ValidateTipoEmpleado">
           <documentation>
-            <![CDATA[primeraClase]]>
+            <![CDATA[primeraClase (*25)]]>
           </documentation>
           <condition>xp20:upper-case($inputVariable.payload/client:tipoEmpleado)='PRIMERACLASE'</condition>
           <assign name="AssignPrice">
@@ -95,16 +95,41 @@
           </assign>
           <else>
             <documentation>
-              <![CDATA[turista]]>
+              <![CDATA[turista (*3)]]>
             </documentation>
             <assign name="AssignPrice">
               <copy>
-                <from>$outputVariable.payload/client:precio*2</from>
+                <from>$outputVariable.payload/client:precio*3</from>
                 <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:precio</to>
               </copy>
             </assign>
           </else>
         </if>
+        <if name="IfCiudadesBono" xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable">
+      <documentation>
+            <![CDATA[CiudadDestino = DUB (Dublín)]]>
+          </documentation>
+      <condition>xp20:upper-case($inputVariable.payload/client:ciudadDestino)='DUB'</condition>
+      <assign name="AssignDiscount">
+         
+      <copy>
+            <from>$outputVariable.payload/client:precio*0.9</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:precio</to>
+         </copy></assign>
+      <elseif>
+         <documentation>
+              <![CDATA[CiudadSalida = MAD (Madrid-Barajas)]]>
+            </documentation>
+         <condition>xp20:upper-case($inputVariable.payload/client:ciudadSalida)='MAD'</condition>
+         <assign name="AssignDiscount">
+            
+         <copy>
+               <from>$outputVariable.payload/client:precio*0.167</from>
+               <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:precio</to>
+            </copy></assign>
+      </elseif>
+      
+   </if>
       </sequence>
       <else>
         <documentation>
